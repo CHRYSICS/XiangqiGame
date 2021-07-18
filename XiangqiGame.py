@@ -556,7 +556,7 @@ class XiangqiGame:
                 # user has input the from location, prompt user to input to location
                 nexLocation = input("To: ")
                 # check if input here was the string 'help'
-                if nexLocation.upper() is 'HELP':
+                if nexLocation.upper() == 'HELP':
                     # for the help options, print exit instructions for play_game
                     print("Type EXIT to exit active game")
                     # else user is prompted to input the location they would like to display possible moves
@@ -724,11 +724,11 @@ class General(GamePiece):
         # check if column is within the palace
         if 3 <= col <= 5:
             # check if player is red and row is within the red palace
-            if self._player is "RED" and 0 <= row <= 2:
+            if self._player == "RED" and 0 <= row <= 2:
                 # piece is in their palace
                 return True
             # check if player is black and row is within the black palace
-            elif self._player is "BLACK" and 7 <= row <= 9:
+            elif self._player == "BLACK" and 7 <= row <= 9:
                 # piece is in their palace
                 return True
             else:
@@ -840,11 +840,11 @@ class Advisor(GamePiece):
         # check if column is within the palace
         if 3 <= col <= 5:
             # check if player is red and row is within the red palace
-            if self._player is "RED" and 0 <= row <= 2:
+            if self._player == "RED" and 0 <= row <= 2:
                 # piece is in their palace
                 return True
             # check if player is black and row is within the black palace
-            elif self._player is "BLACK" and 7 <= row <= 9:
+            elif self._player == "BLACK" and 7 <= row <= 9:
                 # piece is in their palace
                 return True
             else:
@@ -1130,14 +1130,14 @@ class Soldier(GamePiece):
         # Initialize a list that will store the allowed moves after validating on board
         allowed_moves = []
         # check who owns the piece
-        if self.get_player() is "RED":
+        if self.get_player() == "RED":
             # if soldier has passed the river, give more moves
             if curRow > 4:
                 moves = moves[:3]
             else:
                 # else soldier can only move in one direction
                 moves = [moves[0]]
-        if self.get_player() is "BLACK":
+        if self.get_player() == "BLACK":
             # if soldier has passed the river, give move moves
             if curRow < 5:
                 moves = moves[1:]
@@ -1216,12 +1216,29 @@ class InvalidPlayerError(Exception):
 def main():
     """Testing functionality"""
     game = XiangqiGame()
+    #try:
+    #    import tkinter as tk
+    #    print("Tkinker import success")
+    #    window = tk.Tk()
+    #    window.title("Xiangqi")
+    #    window.geometry("400x300")
+    #    window.start = tk.Button()
+    #    window.start["text"] = "PLAY GAME"
+    #    window.start.pack(side="bottom")
+
+    #    window.mainloop()
+
+    #except ImportError:
+    #    print("tkinter import failed")
+    # print("Default to Terminal Interface...")
     game.show_board()
-    print("Type PLAY to see Xiangqi Game")
+    print("Type PLAY to begin Xiangqi Game")
     make_play = input()
     # not typing play bypasses play option, goes to test code instead
     if make_play.upper() == 'PLAY':
         game.play_game(True)
+
+
     # insert other testing code here
 
     # Designer's temporary test code:
@@ -1273,6 +1290,7 @@ def main():
     # game.make_move("a2", "d2")
     # print(game.is_in_check_mate("black"))
     # game.make_move("d9", "e9") # FIXED: Seems to work!
+    
 
 
 if __name__ == "__main__":
