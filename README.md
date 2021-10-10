@@ -1,7 +1,18 @@
 # CS162FinalProject
 Final state of final project for OSU CS 162 course
+
+# Instructions
+For CLI/original project:
+
+`python XiangqiGame.py`
+
+For updated interface using tkinter:
+
+`python xiangqi.py`
+
 # portfolio-project
 
+## Original Project Outline:
 Write a class named XiangqiGame for playing an abstract board game called xiangqi.   Please read the "Board", "Rules", and "Pieces" sections on [the Wikipedia page](https://en.wikipedia.org/wiki/Xiangqi).  You do not have to implement the rules regarding perpetual check or chasing.  You **do** need to correctly handle stalemate.  You also need to correctly handle all piece-specific rules, e.g. generals aren't allowed to "see" each other, horses can be blocked, elephants can't cross the river, etc.
 
 A general is in check if it could be captured on the opposing player's next move. A player cannot make a move that puts or leaves their general in check. The Wikipedia page says "The game ends when one player captures the other's general", but it's more accurate to say that it ends when one player **checkmates** the other's general.  You don't actually capture a general, instead you have to put it in such a position that it cannot escape being in check, meaning that no matter what, it could be captured on the next move.  This works the same as in chess, if you're familiar with that game.
@@ -29,3 +40,21 @@ game.make_move('e7', 'e6')
 state = game.get_game_state()
 ```
 The file must be named: **XiangqiGame.py**
+
+## Project Update:
+Revisiting the project, expanded the application interface using `tkinter` to improve user experience.
+
+Using `tkinter`, created a python graphical user interface (GUI) for the frontend while using existing CLI program for backend logic.
+
+Simple design:
+* Allow user to mouse events to update game state.
+* Expanded available moves option as a right click event (right click piece to see move options)
+* Displayed player game state for round-based use.
+* Created simple menu options to restart game and undo last move.
+
+## Project Future Plans:
+Since project is stictly two-player, future plans include expanding game to include an AI.
+
+Consideration for adjustable AI modes is with the minimax algorithm. 
+
+The AI will be constructed as a separate class within xiangqiAI.py to be imported into the game logic.
