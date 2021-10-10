@@ -18,13 +18,15 @@
 #              of the program.  This script introduces two exceptions class for handling algebraic
 #              notation errors and a class for player name input errors.  The main function 'PLAY' option
 #              is supported by some of the display methods found in the XiangqiGame class.
-
+import copy
 
 class XiangqiGame:
     """Represents Game of Xiangqi with players, board pieces, and a game state"""
 
     def __init__(self):
         """Initialize Xiangqi game parameters, set up the game piece"""
+        self._game_log = []
+        self.counter = 1
         self._game_state = "UNFINISHED"
         self._active_player = "RED"
         self._other_player = "BLACK"
@@ -32,6 +34,42 @@ class XiangqiGame:
         self.board_piece_setup()
         self._generals = {"RED": self._board_dictionary[(4, 0)],
                           "BLACK": self._board_dictionary[(4, 9)]}
+        self.update_log()
+
+    def update_log(self):
+        """Append current state to game play log"""
+        current = {
+            'turn': self.counter,
+            'state': self._game_state,
+            'player': self._active_player,
+            'opponent': self._other_player,
+            'board': copy.deepcopy(self._board_dictionary),
+            'generals': copy.deepcopy(self._generals),
+            'turn': self.counter}
+        self._game_log.append(current)
+        self.counter += 1
+
+    def sync_to_last_log(self):
+        """Update game to last game play in log (Effectively an 'Undo last move')"""
+        #print(self._game_log)
+        try:
+            # don't allow popping of past initial game state
+            if len(self._game_log) == 1:
+                raise IndexError
+            # remove current state
+            self._game_log.pop()
+            # get prev state
+            loggedState = self._game_log.pop()
+            self._game_state = loggedState['state']
+            self._active_player = loggedState['player']
+            self._other_player = loggedState['opponent']
+            self._board_dictionary = loggedState['board']
+            self._generals = loggedState['generals']
+            self.counter = loggedState['turn'] + 1
+            self._game_log.append(loggedState)
+        except IndexError:
+            print("Index Error: No past game play found")
+
 
     def board_piece_setup(self):
         """Sets up board dictionary, where keys are starting locations and GamePieces are values"""
@@ -266,7 +304,9 @@ class XiangqiGame:
                             # update game state to other player has won
                             self._game_state = self._active_player + "_WON"
                             print(self._game_state)
-                            # move not allowed, return False
+                            # update game play log
+                            self.update_log()
+                            # move allowed, ends game
                             return True
                         else:
                             # exchange active player and other player
@@ -274,6 +314,8 @@ class XiangqiGame:
                             self._other_player = self._active_player
                             self._active_player = new_active_player
                             print(captured_piece, "was captured")
+                            # update game play log
+                            self.update_log()
                             # move allowed, return True
                             return True
                     else:
@@ -303,7 +345,9 @@ class XiangqiGame:
                         # update game state to other player has won
                         self._game_state = self._active_player + "_WON"
                         print(self._game_state)
-                        # move not allowed, return False
+                        # update game play log
+                        self.update_log()
+                        # move allowed, game completed
                         return True
                     else:
                         # exchange active player and other player
@@ -311,6 +355,8 @@ class XiangqiGame:
                         self._other_player = self._active_player
                         self._active_player = new_active_player
                         print(piece.get_pieceName(), "was moved")
+                        # update game play log
+                        self.update_log()
                         # move allowed, return True
                         return True
                 else:
@@ -584,6 +630,9 @@ class XiangqiGame:
     def get_game_state(self):
         """Returns the game state.  It should be either 'UNFINSHED', 'RED_WON', or 'BLACK_WON'"""
         return self._game_state
+
+    def get_gamelog(self):
+        return self._game_log
 
     def get_active_player(self):
         """Returns the active player whose turn it is"""
